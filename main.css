@@ -1,0 +1,46 @@
+/* FONTS */
+@font-face {
+    font-family: 'Roboto Regular';
+    src: url('./resources/fonts/roboto-regular.woff2') format('woff2'),
+         url('./resources/fonts/roboto-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto Thin';
+    src: url('./resources/fonts/roboto-thin.woff2') format('woff2'),
+         url('./resources/fonts/roboto-thin.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* LAYOUT */
+
+html, body {
+    margin: 0;
+}
+
+body {
+    background-color: #222;
+    font-family: Roboto Regular;
+}
+
+canvas {
+    border: 1px solid red;
+    image-rendering: pixelated;
+}
+
+.ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #eee;
+    display: inline-block;
+    padding: 10px;
+}
+
+.ui label {
+    display: inline-block;
+    width: 6em;
+}
