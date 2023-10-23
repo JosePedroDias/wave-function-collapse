@@ -28,6 +28,14 @@ export function ui() {
     const uiEl = document.createElement('div');
     uiEl.className = 'ui';
 
+    const repoDivEl = document.createElement('div');
+    const aEl = document.createElement('a');
+    aEl.appendChild(document.createTextNode('github repo'));
+    aEl.href = 'https://github.com/josepedrodias/wave-function-collapse';
+    aEl.target = '_blank';
+    repoDivEl.appendChild(aEl);
+    uiEl.appendChild(repoDivEl);
+
     options.forEach((opt) => {
         const divEl = document.createElement('div');
         const labelEl = document.createElement('label');

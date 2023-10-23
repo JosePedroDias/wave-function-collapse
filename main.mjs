@@ -9,9 +9,6 @@ import { DrawWorld } from './wfc.mjs';
 
 (async function() {
     await fontLoader(ROBOTO_REGULAR_FNT);
-    const S_FNT = fontStyle(ROBOTO_REGULAR_FNT, 8);
-    const M_FNT = fontStyle(ROBOTO_REGULAR_FNT, 11);
-    const L_FNT = fontStyle(ROBOTO_REGULAR_FNT, 14);
 
     const img = new Imagee(config.tileset);
     await img.onceReady;
@@ -26,6 +23,8 @@ import { DrawWorld } from './wfc.mjs';
         const lineColor = 'gray';
         const indexColor = 'magenta';
 
+        const S_FNT = fontStyle(ROBOTO_REGULAR_FNT, 8 * config.canvasScale);
+
         const dx = config.tileDims[0] * config.canvasScale;
         const dy = config.tileDims[1] * config.canvasScale;
         const xx = img.dims[0] / config.canvasScale;
@@ -33,16 +32,16 @@ import { DrawWorld } from './wfc.mjs';
         for (let iy of times(xx)) {
             for (let ix of times(yy)) {
                 cvs.text(
-                    L_FNT,
-                    [   (ix + 0.33) * dx,
-                        (iy + 0.33) * dy],
+                    S_FNT,
+                    [   (ix + 0.25) * dx,
+                        (iy + 0.25) * dy],
                     `${ix}`,
                     indexColor
                 );
                 cvs.text(
-                    L_FNT,
-                    [   (ix + 0.66) * dx,
-                        (iy + 0.66) * dy],
+                    S_FNT,
+                    [   (ix + 0.75) * dx,
+                        (iy + 0.75) * dy],
                     `${iy}`,
                     indexColor
                 );
@@ -107,6 +106,9 @@ import { DrawWorld } from './wfc.mjs';
         worldCanvas.textAlignment(0.5, 0.5);
         document.body.appendChild(worldCanvas.el);
 
+        const S_FNT = fontStyle(ROBOTO_REGULAR_FNT,  8 * config.canvasScale);
+        const M_FNT = fontStyle(ROBOTO_REGULAR_FNT, 11 * config.canvasScale);
+        const L_FNT = fontStyle(ROBOTO_REGULAR_FNT, 14 * config.canvasScale);
         const fonts = [S_FNT, M_FNT, L_FNT];
         const dw = new DrawWorld(worldCanvas, sprites, [dx, dy], fonts);
 
