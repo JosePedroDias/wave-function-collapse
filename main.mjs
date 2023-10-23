@@ -110,37 +110,57 @@ import { DrawWorld } from './wfc.mjs';
         const M_FNT = fontStyle(ROBOTO_REGULAR_FNT, 11 * config.canvasScale);
         const L_FNT = fontStyle(ROBOTO_REGULAR_FNT, 14 * config.canvasScale);
         const fonts = [S_FNT, M_FNT, L_FNT];
+
         const dw = new DrawWorld(worldCanvas, sprites, [dx, dy], fonts);
 
-        let lastDrawnT = Date.now();
+        // setup initial state (optional)
+        if (false) {
+            const tileIndexLookup = new Map();
+            config.tilesVariants.forEach((tv, idx) => tileIndexLookup.set(tv.name, idx));
 
-        let keepGoing = true;
-        let iter = 0;
+            const tile = dw.world.getTile([10, 10]);
+            const tileIndexToSet = tileIndexLookup.get('TILE_HOUSE');
+            tile.possibilities = [tileIndexToSet, tileIndexToSet]; // I have to set it twice to avoid entropy being 0
 
-        const slowMode = options.stepMode === '500msPerStep';
-        const onlyDrawAtTheEnd = options.stepMode === 'onlyEnd';
+            dw.world.waveFunctionCollapse();
 
-        if (onlyDrawAtTheEnd) console.time('wfc');
-        while (keepGoing) {
-            if (!onlyDrawAtTheEnd) {
-                const t = Date.now();
-                dw.update();
-                if (slowMode) {
-                    document.title = `#${iter}`;
-                    await sleep(500);
-                } else if (t - lastDrawnT > 100) {
-                    document.title = `#${iter}`;
-                    await sleep(0);
-                    lastDrawnT = Date.now();
-                }
-            }
-            keepGoing = dw.world.waveFunctionCollapse();
-            ++iter;
+            dw.update();
+            await sleep(2000);
         }
-        if (onlyDrawAtTheEnd) console.timeEnd('wfc');
 
-        dw.update();
-        document.title = `#${iter}`;
+        // run wave function collapse
+        if (true) {
+            let lastDrawnT = Date.now();
+
+            let keepGoing = true;
+            let iter = 0;
+
+            const slowMode = options.stepMode === '500msPerStep';
+            const onlyDrawAtTheEnd = options.stepMode === 'onlyEnd';
+
+            if (onlyDrawAtTheEnd) console.time('wfc');
+            while (keepGoing) {
+                if (!onlyDrawAtTheEnd) {
+                    const t = Date.now();
+                    dw.update();
+                    if (slowMode) {
+                        document.title = `#${iter}`;
+                        await sleep(500);
+                    } else if (t - lastDrawnT > 100) {
+                        document.title = `#${iter}`;
+                        await sleep(0);
+                        lastDrawnT = Date.now();
+                    }
+                }
+                keepGoing = dw.world.waveFunctionCollapse();
+                ++iter;
+            }
+            if (onlyDrawAtTheEnd) console.timeEnd('wfc');
+
+            dw.update();
+            document.title = `#${iter}`;
+        }
+
         console.log('done!');
     }
 

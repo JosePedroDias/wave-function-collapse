@@ -1,21 +1,21 @@
-import {
-    GRASS,
-    WATER,
-    FOREST,
-    COAST_N,
-    COAST_E,
-    COAST_S,
-    COAST_W,
-    FOREST_N,
-    FOREST_E,
-    FOREST_S,
-    FOREST_W,
-    ROCK_N,
-    ROCK_E,
-    ROCK_S,
-    ROCK_W,
-    ROCK,
-} from './constants.mjs';
+const GRASS    =  0;
+const WATER    =  1;
+const FOREST   =  2;
+const COAST_N  =  3;
+const COAST_E  =  4;
+const COAST_S  =  5;
+const COAST_W  =  6;
+const FOREST_N =  7;
+const FOREST_E =  8;
+const FOREST_S =  9;
+const FOREST_W = 10;
+const ROCK_N   = 11;
+const ROCK_E   = 12;
+const ROCK_S   = 13;
+const ROCK_W   = 14;
+const ROCK     = 15;
+
+const L = 16; // tile side in pixels
 
 const tilesVariants = [
     { name: 'TILE_GRASS',     origin: [ 16,   0], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight: 16 },
@@ -53,6 +53,7 @@ const tilesVariants = [
     { name: 'TILE_FORESTSE2', origin: [ 96, 112], rules: [FOREST_E, FOREST,   FOREST,   FOREST_S], weight:  2 },
     { name: 'TILE_FORESTSW2', origin: [112, 112], rules: [FOREST_W, FOREST_S, FOREST,   FOREST],   weight:  2 },
     { name: 'TILE_FORESTNW2', origin: [112, 128], rules: [FOREST,   FOREST_N, FOREST_W, FOREST],   weight:  2 },
+    //{ name: 'TILE_HOUSE',     origin: [4*L, 26*L], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight:  1 },
 ];
 
 export const config = {
