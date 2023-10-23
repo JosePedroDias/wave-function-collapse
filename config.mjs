@@ -53,13 +53,15 @@ const tilesVariants = [
     { name: 'TILE_FORESTSE2', origin: [ 96, 112], rules: [FOREST_E, FOREST,   FOREST,   FOREST_S], weight:  2 },
     { name: 'TILE_FORESTSW2', origin: [112, 112], rules: [FOREST_W, FOREST_S, FOREST,   FOREST],   weight:  2 },
     { name: 'TILE_FORESTNW2', origin: [112, 128], rules: [FOREST,   FOREST_N, FOREST_W, FOREST],   weight:  2 },
-    //{ name: 'TILE_HOUSE',     origin: [4*L, 26*L], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight:  1 },
+    { name: 'TILE_HOUSE',      origin: [ 4*L, 26*L], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight: 0 },
+    { name: 'TILE_HOUSE_CYAN', origin: [ 5*L, 34*L], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight: 0 },
+    { name: 'TILE_HOUSE_RED',  origin: [15*L, 34*L], rules: [GRASS,    GRASS,    GRASS,    GRASS],    weight: 0 },
 ];
 
 export const config = {
     tileset: './resources/images/punyworld-overworld-tileset.png',
     tileDims: [16, 16],
-    canvasTiles: [38, 30], canvasScale: 2,
-    //canvasTiles: [76, 60], canvasScale: 1,
+    canvasTiles: [20, 20],
+    canvasScale: 2,
     tilesVariants,
 };

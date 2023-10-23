@@ -5,7 +5,7 @@ import { Canvass, Imagee } from './canvas.mjs';
 import { fontLoader, fontStyle } from './font.mjs';
 import { sleep, times } from './misc.mjs';
 import { ui } from './ui.mjs';
-import { DrawWorld } from './wfc.mjs';
+import { Tile, DrawWorld } from './wfc.mjs';
 
 (async function() {
     await fontLoader(ROBOTO_REGULAR_FNT);
@@ -93,8 +93,10 @@ import { DrawWorld } from './wfc.mjs';
         config.canvasScale = parseInt(options.scale, 10);
         const dx = config.tileDims[0] * config.canvasScale;
         const dy = config.tileDims[1] * config.canvasScale;
-        config.canvasTiles[0] = Math.floor(window.innerWidth  / dx);
-        config.canvasTiles[1] = Math.floor(window.innerHeight / dy);
+        const W = Math.floor(window.innerWidth  / dx);
+        const H = Math.floor(window.innerHeight / dy);
+        config.canvasTiles[0] = W;
+        config.canvasTiles[1] = H;
 
         const sprites = _prepareSprites();
 
@@ -111,21 +113,35 @@ import { DrawWorld } from './wfc.mjs';
         const L_FNT = fontStyle(ROBOTO_REGULAR_FNT, 14 * config.canvasScale);
         const fonts = [S_FNT, M_FNT, L_FNT];
 
-        const dw = new DrawWorld(worldCanvas, sprites, [dx, dy], fonts);
+        Tile.variants = config.tilesVariants;
+        Tile.weights = config.tilesVariants.map((tv) => tv.weight);
+
+        const dw = new DrawWorld(config.canvasTiles, worldCanvas, sprites, config.canvasScale, [dx, dy], fonts);
 
         // setup initial state (optional)
-        if (false) {
+        if (true) {
             const tileIndexLookup = new Map();
             config.tilesVariants.forEach((tv, idx) => tileIndexLookup.set(tv.name, idx));
 
-            const tile = dw.world.getTile([10, 10]);
-            const tileIndexToSet = tileIndexLookup.get('TILE_HOUSE');
-            tile.possibilities = [tileIndexToSet, tileIndexToSet]; // I have to set it twice to avoid entropy being 0
+            const whatToPlace = [
+                //{ name: 'TILE_HOUSE', positions: [[10, 10], [20, 10]] },
+                { name: 'TILE_HOUSE_CYAN', positions: [[Math.floor(0.25 * W), Math.floor(0.5 * H)]] },
+                { name: 'TILE_HOUSE_RED',  positions: [[Math.floor(0.75 * W), Math.floor(0.5 * H)]] },
+            ];
 
-            dw.world.waveFunctionCollapse();
+            for (const { name, positions } of whatToPlace) {
+                const tileIndexToSet = tileIndexLookup.get(name);
+                const variantHadZeroWeight = Tile.weights[tileIndexToSet] === 0;
+                if (variantHadZeroWeight) Tile.weights[tileIndexToSet] = 1;
+                for (const pos of positions) {
+                    dw.world.getTile(pos).possibilities = [tileIndexToSet, tileIndexToSet]; // I have to set it twice to avoid entropy being 0
+                    dw.world.waveFunctionCollapse();
+                }
+                if (variantHadZeroWeight) Tile.weights[tileIndexToSet] = 0;
+            }
 
             dw.update();
-            await sleep(2000);
+            await sleep(1000);
         }
 
         // run wave function collapse

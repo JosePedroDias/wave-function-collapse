@@ -1,4 +1,3 @@
-import { config } from './config.mjs';
 import { EAST, NORTH, SOUTH, WEST } from './constants.mjs';
 import { times, randomFromArray, randomFromArrayWeighted } from './misc.mjs';
 
@@ -21,12 +20,12 @@ export class Stack {
     }
 }
 
-const TILE_VARIANTS = config.tilesVariants;
-const WEIGHTS = TILE_VARIANTS.map((tv) => tv.weight);
-
 export class Tile {
+    static variants = [];
+    static weights = [];
+
     constructor() {
-        this.possibilities = times(TILE_VARIANTS.length);
+        this.possibilities = times(Tile.variants.length);
         this.neighbors = new Map();
     }
 
@@ -47,7 +46,7 @@ export class Tile {
     }
 
     collapse() {
-        const weights = this.possibilities.map((i) => WEIGHTS[i]);
+        const weights = this.possibilities.map((i) => Tile.weights[i]);
         this.possibilities = [ randomFromArrayWeighted(this.possibilities, weights) ];
     }
 
@@ -57,7 +56,7 @@ export class Tile {
         if (this.entropy > 0) {
             const connectors = new Set();
             for (const np of neighborPossibilities) {
-                connectors.add(TILE_VARIANTS[np].rules[direction]);
+                connectors.add(Tile.variants[np].rules[direction]);
             }
 
             let opposite;
@@ -68,7 +67,7 @@ export class Tile {
 
             const possibilitiesCopy = Array.from(this.possibilities);
             for (const possibility of possibilitiesCopy) {
-                if (!connectors.has(TILE_VARIANTS[possibility].rules[opposite])) {
+                if (!connectors.has(Tile.variants[possibility].rules[opposite])) {
                     const idx = this.possibilities.indexOf(possibility);
                     this.possibilities.splice(idx, 1);
                     reduced = true;
@@ -176,13 +175,14 @@ export class World {
 }
 
 export class DrawWorld {
-    constructor(canvas, sprites, [dx, dy], fonts) {
-        this._dims = config.canvasTiles;
+    constructor([w, h], canvas, sprites, spriteScale, [dx, dy], fonts) {
+        this._dims = [w, h];
         this.canvas = canvas;
         this.sprites = sprites;
+        this.spriteScale = spriteScale;
         this.deltas = [dx, dy];
         this.fonts = fonts;
-        this.world = new World(config.canvasTiles);
+        this.world = new World(this._dims);
     }
 
     getPositions() {
@@ -216,11 +216,11 @@ export class DrawWorld {
                     font = this.fonts[2];
                     color = 'white';
                 }
-                if (tileEntropy === lowestEntropy /*&& tileEntropy < 26*/) color = 'green';
+                if (tileEntropy === lowestEntropy) color = 'green';
                 this.canvas.text(font, [pxc, pyc], `${tileEntropy}`, color)
             } else {
                 const spr = this.sprites[ tile.possibilities[0] ];
-                this.canvas.drawScaled(spr, [px, py], config.canvasScale);
+                this.canvas.drawScaled(spr, [px, py], this.spriteScale);
             }
         }
     }
